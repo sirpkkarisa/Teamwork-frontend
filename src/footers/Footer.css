@@ -1,0 +1,13 @@
+footer{
+    width: 100%;
+    height: 71px;
+    background-color: #000;
+    opacity: 0.8;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+footer i{
+    margin-left: 10em;
+    padding-bottom: 2px;
+}
