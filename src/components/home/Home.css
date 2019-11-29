@@ -1,3 +1,6 @@
+.cont{
+    display: inline;
+}
 .Background-Upper{
     margin-bottom: 12em;
 }
@@ -5,18 +8,18 @@
     width: 100%;
     height: 364px;
 }
-form{
+.Form{
     margin-top: -20em;
     margin-left: 2em;
 }
-form p{
+.Form p{
     padding-bottom: 0.9em;
 }
-form p input{
+.Form p input{
     width: 200px;
     height: 33px;
 }
-form p label{
+.Form p label{
     height: 33px;
     font-size: 1.5em;  
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -74,4 +77,22 @@ h2{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+}
+.error-e{
+    border: red solid 1px;
+    margin-left: 0.9em;
+
+}
+.success-e{
+    border:green solid 1px;
+    margin-left: 0.9em;
+}
+.error-p{
+    border: red solid 1px;
+    margin-left: 5.1em;
+
+}
+.success-p{
+    border:green solid 1px;
+    margin-left: 5.1em;
 }

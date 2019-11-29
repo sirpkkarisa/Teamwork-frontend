@@ -1,0 +1,10 @@
+.Article{
+	display: flex;
+	flex-direction: row;
+	justify-content:space-between;
+	margin:2em;
+}
+.TitleAndDate{
+	display: flex;
+	flex-direction: column;
+}

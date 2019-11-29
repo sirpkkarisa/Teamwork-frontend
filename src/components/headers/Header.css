@@ -48,3 +48,9 @@ img{
 a{
     text-decoration: none;
 }
+.Modal{
+    display: flex;
+}
+.Display{
+    display: none;
+}

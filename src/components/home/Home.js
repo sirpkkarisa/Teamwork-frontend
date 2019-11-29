@@ -1,24 +1,105 @@
 import React from 'react';
 import './Home.css';
-import background from '../images/background.gif';
+import background from '../../images/background.gif';
+import {Redirect} from 'react-router-dom';
 
 class Home extends React.Component{
+    state={
+        mailIput:'',
+        passInput:''
+    }
+    isAuthenticated=()=>{
+        const token = localStorage.getItem('token');
+        return token && token.length > 20;
+    };
+    validateEmail=(mail)=>{
+        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if (mail.match(pattern) !== null) {
+                return true;
+            }
+            return false;
+    }
+    passwordIsWeak=(pass)=>{
+        const pattern = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{6,})');
+        if (pass.match(pattern)) {
+            return true;
+        }
+        return false;
+    }
+    onLogin=(e)=>{
+        e.preventDefault();
+        const email=this.email.value;
+        const password=this.password.value;
+        const Email=document.getElementsByClassName('Email');
+        const Password=document.getElementsByClassName('Password');
+
+        this.email.value='';
+        this.password.value='';
+        if (email.length <1 || password < 1) {
+            Password[0].classList.add('error-p')
+             return Email[0].classList.add('error-e');
+        }
+        if (!this.validateEmail(email) || !this.passwordIsWeak(password)) {
+            Password[0].classList.add('error-p')
+            return Email[0].classList.add('error-e');
+        }
+        fetch(
+            'http://localhost:7000/auth/signin/',
+            {
+                method:'POST',
+                headers:{
+                    'Accept':'application/json,*/*',
+                    'Content-type':'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            }
+        ).then(
+            (res)=>res.json()
+        ).then(
+            (res)=>{
+                if (res.error ==='Unauthorized') {
+                    return alert('Incorrect cridentials')
+                }
+                if (res.error) {
+                    return alert('Uncaugt ERROR')
+                }
+                localStorage.setItem('token',res.data.token);
+                localStorage.setItem('id',res.data.employeeId);
+                // this.setState();
+                Password[0].classList.add('success-p')
+                return Email[0].classList.add('success-e');
+                this.setState()
+            }
+        ).catch(
+            (error)=>{
+                console.log(error)
+            }
+        )
+      }
+      
     render(){
+        const auth = this.isAuthenticated();
         return(
             <div>
-                <div className='Background-Upper'>
+                {
+                    auth ? <Redirect to='/articles'/>:(
+                        <div>
+                        <div className='Background-Upper'>
                     <img src={background} className='backround'/>
-                    <form>
+                    <form className='Form'>
                         <p>
                             <label>Email Address:</label>
-                            <input type='text' placeholder='Email Address' className='Email'/>
+                            <input type='text' placeholder='Email Address' ref={email=>this.email=email} className='Email'/>
                         </p>
                         <p>
                             <label>Password:</label>
-                            <input type='password' placeholder='Password' className='Password'/>
+                            <input type='password' placeholder='Password' ref={password=>this.password=password} className='Password'/>
                         </p>
                         <p>
-                            <input type='submit' value='Sign In' className='Sign-In'/>
+                            <input type='submit' value='Sign In' onClick={this.onLogin} className='Sign-In'/>
                         </p>
                     </form>
                 </div>
@@ -75,6 +156,9 @@ class Home extends React.Component{
                         </div>
                     </div>
                 </div>
+                        </div>
+                        )
+                }
             </div>
         );
     }
