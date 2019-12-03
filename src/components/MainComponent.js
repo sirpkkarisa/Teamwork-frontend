@@ -4,7 +4,7 @@ import Header from './headers/Header';
 import Footer from './footers/Footer';
 import Home from  './home/Home';
 import Form from './create-user/Form';
-import Article from './articles/Article';
+import Articles from './articles/Articles';
 import Gifs from  './gifs/Gifs'
 
 
@@ -25,7 +25,7 @@ class MainComponent extends React.Component {
               <Form />
             )
           }/>
-          <Route exact path='/articles' component={Article}/>
+          <Route exact path='/articles' component={Articles}/>
           <Route exact path='/gifs' component={Gifs}/>
         </Router>
         <Footer />

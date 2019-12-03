@@ -1,10 +1,13 @@
 import React from 'react';
 import './Article.css';
 import { Redirect } from 'react-router-dom';
+import ArticleItem from './ArticleItem'
+import SingleArticle from './SingleArticle';
 
-class Article extends React.Component{
+class Articles extends React.Component{
 	state={
-		articles:[]
+		articles:[],
+		singleArticle:''
 	}
 	componentDidMount(){
 		fetch('http://localhost:7000/articles',{
@@ -67,6 +70,29 @@ class Article extends React.Component{
         const token = localStorage.getItem('token');
         return token && token.length > 20;
     };
+    getOneItem=(articleId)=>{
+		fetch(`http://localhost:7000/articles/${articleId}/`,{
+			method:'GET',
+			headers: new Headers({
+				'Authorization':`Bearer ${this.getToken()}`,
+				'Content-Type': 'application/x-www-form-urlencoded'
+			})
+		})
+		.then(
+			(res)=>res.json()
+			)
+		.then(
+			(res) =>this.setState({
+				singleArticle: res.data
+			})
+			)
+		.catch(
+			(res)=>this.setState({
+				articles:'ERROR'
+			})
+			)
+
+	}
     render(){
     	if (!this.isAuthenticated()) {
     		return <Redirect to='/'/>
@@ -74,25 +100,18 @@ class Article extends React.Component{
     	if (this.state.articles === undefined) {
     		return 'Unauthorized to view this page';
     	}
-    	const data=this.state.articles.map((res)=>{
+
+    	const rows=this.state.articles.map((data)=>{
     		return(
-    			<div key={res.articleId} className='Article'>
-    			<div className='TitleAndDate'><strong>Title</strong><span>{res.title}</span> 
-    			<strong>Created On</strong><span>{res.created_on}</span> </div>
-				<div className='Body'><span>{res.article}</span> </div>
-    			</div>
-    			);
-    	})
+    			<ArticleItem article={data} key={data.article_id} getOneItem={this.getOneItem}/> 
+    			)
+    	}) 
         return(
             <div>
-            <p>
-            	<input type='text' placeholder='Article Title' ref={articleTitle=>this.articleTitle=articleTitle}/><br/>
-            	<textarea placeholder='Article' ref={article=>this.article=article}>
-            	</textarea><br/>
-            	<input type='submit' value='New article' onClick={this.handleSubmit}/></p>
-                {data}
+            {rows}
+            <SingleArticle singleArticle={this.state.singleArticle}/>
             </div>
         );
     }
 }
-export default Article;
+export default Articles;
