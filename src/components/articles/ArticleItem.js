@@ -8,8 +8,8 @@ class ArticleItem extends React.Component{
     			<div className='TitleAndDate'><strong>Title</strong><span>{title}</span> 
     			<strong>Created On</strong><span>{created_on}</span> </div>
 				<div className='Body'><span>{article}</span> </div>
-    			</div>
-			)
+			</div>
+		)
 	}
 }
 export default ArticleItem;
