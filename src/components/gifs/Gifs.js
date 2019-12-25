@@ -1,9 +1,14 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import GifItem from './GifItem';
+import Rows from './Rows';
+import SingleGif from './SingleGif';
+
 class Gifs extends React.Component{
 	state={
 		Gifs:[],
-		selectedFile:null
+		singleGif:'',
+		eId:''
 	}
 	gif=React.createRef();
 	openFile=()=>{
@@ -13,7 +18,8 @@ class Gifs extends React.Component{
 			selectedFile:gif
 		})
 	}
-	gifBtn=()=>{
+	gifBtn = (e) =>{
+		e.preventDefault();
 		const imageTitle = this.imageTitle.value;
 		const employeeId = this.getUserId();
 		// const gif = document.querySelector('input[type=file]');
@@ -88,6 +94,96 @@ class Gifs extends React.Component{
 	getUserId =()=>{
 		return localStorage.getItem('id');
 	}
+	getOneGif = (gifId) => {
+		const form =  document.querySelector('form');
+    	form.style.display='none';
+		fetch(`http://localhost:7000/gifs/${gifId}/`,{
+			method:'GET',
+			headers: new Headers({
+				'Authorization':`Bearer ${this.getToken()}`,
+				'Content-Type': 'application/x-www-form-urlencoded'
+			})
+		})
+		.then(
+			(res)=>res.json()
+			)
+		.then(
+			(res) =>this.setState({
+				singleGif: res.data
+			})
+			)
+		.catch(
+			(res)=>this.setState({
+				singleGif:'ERROR'
+			})
+			)
+
+	}
+	handleDelete = (id) => {
+		const employeeId = this.getUserId();
+		const articleId=this.props.match.params = id;
+		fetch(`http://localhost:7000/gifs/${articleId}`,{
+			method:'DELETE',
+			headers: new Headers({
+				'Authorization':`Bearer ${this.getToken()}`,
+				'Content-Type': 'application/json'
+			}),
+			body:JSON.stringify({
+				employeeId,
+				articleId,
+			})
+		})
+		.then(
+			(res) => res.json()
+			)
+		.then(
+			(res) =>{
+				this.setState()
+			}
+		)
+		.catch(
+			(error) => {
+				console.log(error)
+			}
+			)
+	}
+	handleCommentForm = (e) => {
+		e.preventDefault();
+		const comment = this.comment.value;
+		const gifId=this.props.match.params = this.state.eId;
+
+		fetch(`http://localhost:7000/gifs/${gifId}/comment`,{
+			method:'POST',
+			headers: new Headers({
+				'Authorization':`Bearer ${this.getToken()}`,
+				'Content-Type': 'application/json'
+			}),
+			body:JSON.stringify({
+				comment,
+			})
+		})
+		.then(
+			(res) => res.json()
+			)
+		.then(
+			(res) =>{
+				this.setState()
+			}
+		)
+		.catch(
+			(error) => {
+				console.log(error)
+			}
+			)
+
+	}
+	handleComment = (id) => {
+		const commentForm = document.getElementsByClassName('Comment');
+		const AGif =  document.getElementsByClassName('AGif');
+		AGif[0].style.display='none';
+		commentForm[0].style.display='inline-block';
+		this.setState({eId:id});
+	}
 	render(){
 		if (!this.isAuthenticated()) {
 			return <Redirect to='/'/>;
@@ -97,22 +193,32 @@ class Gifs extends React.Component{
     	}
 		const gifs=this.state.Gifs.map((data)=>{
 			return(
-				<div key={data.gifId} className='Article'>
-    			<div className='TitleAndDate'><strong>Title</strong><span>{data.image_title}</span> 
-    			<strong>Created On</strong><span>{data.created_on}</span> </div>
-				<div className='Body'><img src={data.image_url}/></div>
-    			</div>
+				<GifItem  key={data.gif_id} gifs={data} getOneGif={this.getOneGif}/>
 				);
 		});
 		return(
+			<React.Fragment>
 			<div>
-			<p>
+			<form onSubmit={this.gifBtn} className='AGif'>
 			<input type='text' placeholder='GIF Title' ref={imageTitle=>this.imageTitle=imageTitle}/>
 			<input type='file' onChange={this.openFile} />
-			<input type='submit' value='Add GIF' onClick={this.gifBtn}/>
-			</p>
-				{gifs}
+			<input type='submit' value='Add GIF' />
+			</form>				{
+					this.state.singleGif ?
+					 <SingleGif singleGif={this.state.singleGif}
+					 handleDelete={this.handleDelete}
+					 handleComment={this.handleComment}/>:(
+						<Rows gifs={gifs}/>
+						)
+				}
+				<div>
+	            <form style={{display:'none'}} onSubmit={this.handleCommentForm} className='Comment'>
+		            <p><textarea ref={comment=>this.comment=comment}></textarea></p>
+		            <p><input type='submit' value='Comment'/></p>
+	            </form>
+	            </div>
 			</div>
+			</React.Fragment>
 			);
 	}
 }

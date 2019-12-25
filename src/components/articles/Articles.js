@@ -11,8 +11,6 @@ class Articles extends React.Component{
 	state={
 		articles:[],
 		singleArticle:'',
-		// editTitle:'',
-		// editArticle:''
 		eId:''
 	}
 	componentDidMount(){
@@ -42,7 +40,10 @@ class Articles extends React.Component{
 	getUserId = () =>{
 		return localStorage.getItem('id');
 	}
-	handleSubmit=()=>{
+	handleSubmit=(e)=>{
+		e.preventDefault();
+		// const form =  document.querySelector('form');
+		// form.style.display='none';
 		const title = this.articleTitle.value;
 		const article = this.article.value;
 		const employeeId = this.getUserId();
@@ -71,12 +72,16 @@ class Articles extends React.Component{
 				console.log(error)
 			}
 			)
+		this.articleTitle.value='';
+		this.article.value='';
 	}
 	isAuthenticated=()=>{
         const token = localStorage.getItem('token');
         return token && token.length > 20;
     };
     getOneItem=(articleId)=>{
+		const form =  document.querySelector('form');
+    	form.style.display='none';
 		fetch(`http://localhost:7000/articles/${articleId}/`,{
 			method:'GET',
 			headers: new Headers({
@@ -105,8 +110,7 @@ class Articles extends React.Component{
 		const article = this.eArticle.value;
 		const employeeId = this.getUserId();
 		const articleId=this.props.match.params = this.state.eId;
-		// console.log(articleId)
-		 fetch(`http://localhost:7000/articles/${articleId}`,{
+		fetch(`http://localhost:7000/articles/${articleId}`,{
 			method:'PATCH',
 			headers: new Headers({
 				'Authorization':`Bearer ${this.getToken()}`,
@@ -141,10 +145,69 @@ class Articles extends React.Component{
 		this.setState({eId:articleId})
 	}
 	handleDelete = (id) => {
-		console.log('Delete '+id)
+		const employeeId = this.getUserId();
+		const articleId=this.props.match.params = id;
+		fetch(`http://localhost:7000/articles/${articleId}`,{
+			method:'DELETE',
+			headers: new Headers({
+				'Authorization':`Bearer ${this.getToken()}`,
+				'Content-Type': 'application/json'
+			}),
+			body:JSON.stringify({
+				employeeId,
+				articleId,
+			})
+		})
+		.then(
+			(res) => res.json()
+			)
+		.then(
+			(res) =>{
+				this.setState()
+			}
+		)
+		.catch(
+			(error) => {
+				console.log(error)
+			}
+			)
+	}
+	handleCommentForm = (e) => {
+		e.preventDefault();
+		const comment = this.comment.value;
+
+		const articleId=this.props.match.params = this.state.eId;
+		fetch(`http://localhost:7000/articles/${articleId}/comment`,{
+			method:'POST',
+			headers: new Headers({
+				'Authorization':`Bearer ${this.getToken()}`,
+				'Content-Type': 'application/json'
+			}),
+			body:JSON.stringify({
+				comment,
+			})
+		})
+		.then(
+			(res) => res.json()
+			)
+		.then(
+			(res) =>{
+				this.setState()
+			}
+		)
+		.catch(
+			(error) => {
+				console.log(error)
+			}
+			)
+
 	}
 	handleComment = (id) => {
-		console.log('comment '+id)
+		const commentForm = document.getElementsByClassName('Comment');
+		const AnArticle =  document.getElementsByClassName('AnArticle');
+		AnArticle[0].style.display='none';
+		commentForm[0].style.display='inline-block';
+		this.setState({eId:id});
 	}
     render(){
     	if (!this.isAuthenticated()) {
@@ -161,6 +224,13 @@ class Articles extends React.Component{
     	}) 
         return(
             <React.Fragment>
+            <div>
+            <form onSubmit={this.handleSubmit}>
+            <p><input type='text' placeholder='Title' ref={articleTitle=>this.articleTitle=articleTitle}/></p>
+            <p><textarea ref={article=>this.article=article}></textarea></p>
+            <p><input type='submit' value='Add Article'/></p>
+            </form>
+            </div>
            <div className='AnArticle'>
             {
             this.state.singleArticle ? 
@@ -177,6 +247,12 @@ class Articles extends React.Component{
             <p><input type='text' placeholder='Title' ref={eTitle=>this.eTitle=eTitle}/></p>
             <p><input type='text' placeholder='Article' ref={eArticle=>this.eArticle=eArticle}/></p>
             <p><input type='submit' value='Update'/></p>
+            </form>
+            </div>
+            <div>
+            <form style={{display:'none'}} onSubmit={this.handleCommentForm} className='Comment'>
+            <p><textarea ref={comment=>this.comment=comment}></textarea></p>
+            <p><input type='submit' value='Comment'/></p>
             </form>
             </div>
             </React.Fragment>
