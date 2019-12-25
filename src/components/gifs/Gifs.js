@@ -46,7 +46,7 @@ class Gifs extends React.Component{
 			// // It will be triggered when a file will be selected
 			// gif.addEventListener('change', onSelectFile, false);
 
-		  fetch('http://localhost:7000/gifs',{
+		  fetch('https://quiet-plains-42182.herokuapp.com/gifs',{
 		  	method:'POST',
 		  	headers:new Headers({
 		  		'Authorization': `Bearer ${this.getToken()}`
@@ -66,7 +66,7 @@ class Gifs extends React.Component{
 	}
 
 	componentDidMount(){
-		fetch(`http://localhost:7000/gifs`,{
+		fetch(`https://quiet-plains-42182.herokuapp.com/gifs`,{
 			method:'GET',
 			headers: new Headers({
 				'Authorization':`Bearer ${this.getToken()}`,
@@ -97,7 +97,7 @@ class Gifs extends React.Component{
 	getOneGif = (gifId) => {
 		const form =  document.querySelector('form');
     	form.style.display='none';
-		fetch(`http://localhost:7000/gifs/${gifId}/`,{
+		fetch(`https://quiet-plains-42182.herokuapp.com/gifs/${gifId}/`,{
 			method:'GET',
 			headers: new Headers({
 				'Authorization':`Bearer ${this.getToken()}`,
@@ -122,7 +122,7 @@ class Gifs extends React.Component{
 	handleDelete = (id) => {
 		const employeeId = this.getUserId();
 		const articleId=this.props.match.params = id;
-		fetch(`http://localhost:7000/gifs/${articleId}`,{
+		fetch(`https://quiet-plains-42182.herokuapp.com/gifs/${articleId}`,{
 			method:'DELETE',
 			headers: new Headers({
 				'Authorization':`Bearer ${this.getToken()}`,
@@ -152,7 +152,7 @@ class Gifs extends React.Component{
 		const comment = this.comment.value;
 		const gifId=this.props.match.params = this.state.eId;
 
-		fetch(`http://localhost:7000/gifs/${gifId}/comment`,{
+		fetch(`https://quiet-plains-42182.herokuapp.com/gifs/${gifId}/comment`,{
 			method:'POST',
 			headers: new Headers({
 				'Authorization':`Bearer ${this.getToken()}`,
@@ -175,7 +175,7 @@ class Gifs extends React.Component{
 				console.log(error)
 			}
 			)
-
+		this.comment.value = '';
 	}
 	handleComment = (id) => {
 		const commentForm = document.getElementsByClassName('Comment');

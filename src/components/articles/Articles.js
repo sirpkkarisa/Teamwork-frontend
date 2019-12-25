@@ -14,7 +14,7 @@ class Articles extends React.Component{
 		eId:''
 	}
 	componentDidMount(){
-		fetch('http://localhost:7000/articles',{
+		fetch('https://quiet-plains-42182.herokuapp.com/articles',{
 			method:'GET',
 			headers: new Headers({
 				'Authorization':`Bearer ${this.getToken()}`,
@@ -47,7 +47,7 @@ class Articles extends React.Component{
 		const title = this.articleTitle.value;
 		const article = this.article.value;
 		const employeeId = this.getUserId();
-		fetch('http://localhost:7000/articles',{
+		fetch('https://quiet-plains-42182.herokuapp.com/articles',{
 			method:'POST',
 			headers: new Headers({
 				'Authorization':`Bearer ${this.getToken()}`,
@@ -82,7 +82,7 @@ class Articles extends React.Component{
     getOneItem=(articleId)=>{
 		const form =  document.querySelector('form');
     	form.style.display='none';
-		fetch(`http://localhost:7000/articles/${articleId}/`,{
+		fetch(`https://quiet-plains-42182.herokuapp.com/articles/${articleId}/`,{
 			method:'GET',
 			headers: new Headers({
 				'Authorization':`Bearer ${this.getToken()}`,
@@ -110,7 +110,7 @@ class Articles extends React.Component{
 		const article = this.eArticle.value;
 		const employeeId = this.getUserId();
 		const articleId=this.props.match.params = this.state.eId;
-		fetch(`http://localhost:7000/articles/${articleId}`,{
+		fetch(`https://quiet-plains-42182.herokuapp.com/articles/${articleId}`,{
 			method:'PATCH',
 			headers: new Headers({
 				'Authorization':`Bearer ${this.getToken()}`,
@@ -147,7 +147,7 @@ class Articles extends React.Component{
 	handleDelete = (id) => {
 		const employeeId = this.getUserId();
 		const articleId=this.props.match.params = id;
-		fetch(`http://localhost:7000/articles/${articleId}`,{
+		fetch(`https://quiet-plains-42182.herokuapp.com/articles/${articleId}`,{
 			method:'DELETE',
 			headers: new Headers({
 				'Authorization':`Bearer ${this.getToken()}`,
@@ -177,7 +177,7 @@ class Articles extends React.Component{
 		const comment = this.comment.value;
 
 		const articleId=this.props.match.params = this.state.eId;
-		fetch(`http://localhost:7000/articles/${articleId}/comment`,{
+		fetch(`https://quiet-plains-42182.herokuapp.com/articles/${articleId}/comment`,{
 			method:'POST',
 			headers: new Headers({
 				'Authorization':`Bearer ${this.getToken()}`,
