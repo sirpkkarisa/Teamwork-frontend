@@ -1,0 +1,98 @@
+.cont{
+    display: inline;
+}
+.Background-Upper{
+    margin-bottom: 12em;
+}
+.backround{
+    width: 100%;
+    height: 364px;
+}
+.Form{
+    margin-top: -20em;
+    margin-left: 2em;
+}
+.Form p{
+    padding-bottom: 0.9em;
+}
+.Form p input{
+    width: 200px;
+    height: 33px;
+}
+.Form p label{
+    height: 33px;
+    font-size: 1.5em;  
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.Email{
+    margin-left: 0.9em;
+}
+.Password{
+    margin-left: 5.1em;
+}
+.Sign-In{
+    margin-left: 14.5em;
+    width: 7.5em;
+    cursor: pointer;
+}
+.Lower{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 0.9em;
+    margin-right: 0.9em;
+    height: 30em;
+}
+.First-Col{
+    width: 377px;
+}
+.Second-Col{
+    width: 347px;
+}
+.Second-Col div{
+    margin-top: 0.9em;
+}
+.Third-Col{
+    width: 377px;
+}
+h2{
+    text-align: center;
+}
+.Second-Col div p{
+    text-align: center;
+}
+.Note{
+    width: 100%;
+    height: 135px;
+    background-color: #fff266;
+    border-bottom: darkorange dotted 0.5em;
+    padding: 0.5em;
+}
+.Under-Note{
+    margin-top: 0.9em;
+    width: 100%;
+    height: 50%;
+}
+.Thumbnail{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.error-e{
+    border: red solid 1px;
+    margin-left: 0.9em;
+
+}
+.success-e{
+    border:green solid 1px;
+    margin-left: 0.9em;
+}
+.error-p{
+    border: red solid 1px;
+    margin-left: 5.1em;
+
+}
+.success-p{
+    border:green solid 1px;
+    margin-left: 5.1em;
+}
